@@ -1,0 +1,55 @@
+# Flutter/Dart related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+**/build/
+
+# Flutter iOS and Android build artifacts
+**/ios/Flutter/.last_build_id
+ios/Pods/
+ios/Podfile.lock
+ios/.symlinks/
+android/.gradle/
+android/app/build/
+
+# Flutter Web build artifacts
+/web/.dart_tool/
+web/build/
+
+# Generated files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# IDE and Editor folders and files
+# JetBrains (IntelliJ/Android Studio)
+*.iml
+.idea/
+
+# VS Code settings
+.vscode/
+
+# Android Studio
+.gradle/
+local.properties
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+
+# Log and temp files
+*.log
+*.tmp
+*.swp
+
+# Flutter tool config
+flutter_export_environment.sh
+
+# Obfuscation related (for Dart/Flutter obfuscation)
+app.*.map.json
