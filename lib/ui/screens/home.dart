@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:lux/models/category.dart';
+import 'package:lux/services/category.dart';
+import 'package:lux/ui/widgets/category_list.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<Home> {
+  final CategoryService _categoryService = CategoryService();
+  late Future<List<dynamic>> _categoriesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoriesFuture = _categoryService.fetchCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lux', style: TextStyle(color: Colors.white),)),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(child: Icon(Icons.favorite, size: 50)),
-            ListTile(
-              leading: Icon(Icons.home, color: Colors.white,),
-              title: Text('Home', style: TextStyle(color: Colors.white),),
-              onTap: () {
-                Navigator.pushNamed(context, '/home');
-              }
-            ),
-            ListTile(
-              leading: Icon(Icons.shop, color: Colors.white,),
-              title: Text('Shop', style: TextStyle(color: Colors.white),),
-              onTap: () {
-                Navigator.pushNamed(context, '/shop');
-              }
-            )
-          ],
-        ),
-      ),
+      appBar: AppBar(title: Text("Categories & Products")),
+      body: FutureBuilder<List<dynamic>>(
+        future: _categoriesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text("No categories found"));
+          }
 
-      body: Container(
+          return CategoryList(categories: snapshot.data!);
+        },
       ),
     );
   }
