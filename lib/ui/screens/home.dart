@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lux/services/popular_products.dart';
+import 'package:lux/services/product.dart';
 import 'package:lux/ui/widgets/popular_product_list.dart';
+import 'package:lux/ui/widgets/lux_drawer.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,19 +23,11 @@ class _HomeScreenState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lux')),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            const DrawerHeader(
-              child: Icon(Icons.favorite, size: 50, color: Colors.white),
-            ),
-            _buildDrawerItem(Icons.home, "Home", '/home'),
-            _buildDrawerItem(Icons.shop, "Shop", '/shop'),
-            _buildDrawerItem(Icons.phone, "Contact", '/contact'),
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Lux'),
+        backgroundColor: Colors.transparent,
       ),
+      drawer: LuxDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
@@ -46,35 +39,24 @@ class _HomeScreenState extends State<Home> {
             const SizedBox(height: 16),
             // FutureBuilder with error and empty data handling
             Expanded(
-              child: FutureBuilder<List<dynamic>>(
-                future: _popularProductsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text("Error: ${snapshot.error}"));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text("No popular products found"));
-                  }
-                  return PopularProductList(popularProducts: snapshot.data!);
+              child: PopularProductList(
+                popularProductsFuture: _popularProductsFuture,
+              ),
+            ),
+
+            // Button to navigate to the Shop screen
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/shop');
                 },
+                child: const Text('Browse Shop'),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  // Drawer item builder
-  Widget _buildDrawerItem(IconData icon, String title, String route) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black),
-      title: Text(title, style: const TextStyle(color: Colors.black)),
-      onTap: () {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, route);
-      },
     );
   }
 }

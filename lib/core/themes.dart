@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 
-final ThemeData LuxTheme = ThemeData(
-  brightness: Brightness.light,
-  primaryColor: Color(0xFF1C1C1C), // Deep Black
-  scaffoldBackgroundColor: Color(0xFFD6CFC7),
-
-  appBarTheme: AppBarTheme(
-    color: Color(0xFF007C77),
-    iconTheme: IconThemeData(color: Colors.black),
+ThemeData lightMode = ThemeData(
+  colorScheme: ColorScheme.light(
+    surface: Colors.grey.shade500,
+    primary: Colors.grey.shade200,
+    secondary: Colors.white,
+    inversePrimary: Colors.grey.shade700,
   ),
 
-  drawerTheme: DrawerThemeData(
-    backgroundColor: Color(0xFF007C77), // Dark background
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(color: Colors.black),
+  ),
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.black, // This sets the text color
+    ),
   ),
 
   iconTheme: IconThemeData(
-    color: Colors.black, // Global white icons
+    color: Colors.white
   ),
 
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Colors.black),
-    bodyMedium: TextStyle(color: Colors.black),
-    bodySmall: TextStyle(color: Colors.black),
-  ),
+  listTileTheme: ListTileThemeData(
+    iconColor: Colors.black
+  )
+
 );

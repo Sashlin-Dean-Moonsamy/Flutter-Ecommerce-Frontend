@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context){
     return MaterialApp(
       title: 'E-Commerce App',
-      theme: LuxTheme,  // Light Theme with cream and gold
+      theme: lightMode, // Light Theme with cream and gold
       home: const Home(),
       onGenerateRoute: RouteNames().generateRoute,
     );

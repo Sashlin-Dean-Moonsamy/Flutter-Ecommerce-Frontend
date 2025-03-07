@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lux/models/category.dart';
 import 'package:lux/services/category.dart';
 import 'package:lux/ui/widgets/category_list.dart';
 
@@ -23,7 +22,7 @@ class _HomeScreenState extends State<Shop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Shop", style: TextStyle(color: Colors.black),)),
+      appBar: AppBar(title: Text("Shop")),
       body: FutureBuilder<List<dynamic>>(
         future: _categoriesFuture,
         builder: (context, snapshot) {

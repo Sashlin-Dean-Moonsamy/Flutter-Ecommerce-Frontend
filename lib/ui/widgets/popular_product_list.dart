@@ -18,6 +18,7 @@ class PopularProductList extends StatelessWidget {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text("No popular products found"));
         }
+
         return ListView.builder(
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
