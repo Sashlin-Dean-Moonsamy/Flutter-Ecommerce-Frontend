@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:lux/ui/widgets/product_card.dart';
 
 class PopularProductList extends StatelessWidget {
-  final List<dynamic> popularProducts;
+  final Future<List<dynamic>> popularProductsFuture;
 
-  const PopularProductList({Key? key, required this.popularProducts}) : super(key: key);
+  const PopularProductList({Key? key, required this.popularProductsFuture}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child:  ListView.builder(
-            itemCount: popularProducts.length,
-            itemBuilder: (contect, index){
-              final product = popularProducts[index];
-
-              return ProductCard(product: product);
-            }));
+    return FutureBuilder<List<dynamic>>(
+      future: popularProductsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text("No popular products found"));
+        }
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            return ProductCard(product: snapshot.data![index]);
+          },
+        );
+      },
+    );
   }
 }
