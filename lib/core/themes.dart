@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 final ThemeData LuxTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Color(0xFF1C1C1C), // Deep Black
-  scaffoldBackgroundColor: Color(0xFFF4F1E1), // Light Ivory
+  scaffoldBackgroundColor: Color(0xFFD6CFC7),
 
   appBarTheme: AppBarTheme(
-    color: Color(0xFF1C1C1C),
-    iconTheme: IconThemeData(color: Colors.white),
+    color: Color(0xFF007C77),
+    iconTheme: IconThemeData(color: Colors.black),
   ),
 
   drawerTheme: DrawerThemeData(
-    backgroundColor: Color(0xFF1C1C1C), // Dark background
+    backgroundColor: Color(0xFF007C77), // Dark background
   ),
 
   iconTheme: IconThemeData(
-    color: Colors.white, // Global white icons
+    color: Colors.black, // Global white icons
   ),
 
   textTheme: TextTheme(
