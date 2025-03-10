@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lux/services/category.dart';
 import 'package:lux/ui/widgets/category_list.dart';
+import 'package:lux/models/category.dart';
 
 class Shop extends StatefulWidget {
   const Shop({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class Shop extends StatefulWidget {
 
 class _HomeScreenState extends State<Shop> {
   final CategoryService _categoryService = CategoryService();
-  late Future<List<dynamic>> _categoriesFuture;
+  late Future<List<Category>> _categoriesFuture;
 
   @override
   void initState() {
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<Shop> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Shop")),
-      body: FutureBuilder<List<dynamic>>(
+      body: FutureBuilder<List<Category>>(
         future: _categoriesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

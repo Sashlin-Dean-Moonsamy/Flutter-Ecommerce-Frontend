@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lux/ui/widgets/product_card.dart';
+import 'package:lux/models/product.dart';
 
 class PopularProductList extends StatelessWidget {
-  final Future<List<dynamic>> popularProductsFuture;
+  final Future<List<Product>> popularProductsFuture;
 
-  const PopularProductList({Key? key, required this.popularProductsFuture}) : super(key: key);
+  const PopularProductList({Key? key, required this.popularProductsFuture})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<List<Product>>(
       future: popularProductsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -20,9 +22,18 @@ class PopularProductList extends StatelessWidget {
         }
 
         return ListView.builder(
+          scrollDirection: Axis.horizontal,
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
-            return ProductCard(product: snapshot.data![index]);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              // Adds some space between cards
+              child: Align(
+                alignment: Alignment.center,
+                // Centers each product card horizontally
+                child: ProductCard(product: snapshot.data![index]),
+              ),
+            );
           },
         );
       },

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lux/ui/widgets/product_card.dart';
+import 'package:lux/models/category.dart';
 
 class CategoryList extends StatelessWidget {
-  final List<dynamic> categories;
+  final List<Category> categories;
 
   const CategoryList({Key? key, required this.categories}) : super(key: key);
 
@@ -33,8 +34,11 @@ class CategoryList extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        category['name'],
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        category.name,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     // Horizontal ListView for products within the category
@@ -42,11 +46,13 @@ class CategoryList extends StatelessWidget {
                       height: 200, // Fixed height for horizontal product list
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: (category['products'] as List?)?.length ?? 0,
+                        itemCount: (category.products as List?)?.length ?? 0,
                         itemBuilder: (context, productIndex) {
-                          final product = category['products'][productIndex];
+                          final product = category.products[productIndex];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
                             child: ProductCard(product: product),
                           );
                         },

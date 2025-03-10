@@ -6,6 +6,7 @@ class LuxDrawer extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return  Drawer(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
           const DrawerHeader(

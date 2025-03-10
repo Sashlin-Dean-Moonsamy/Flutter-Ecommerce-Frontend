@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
-    surface: Colors.grey.shade500,
+    surface: Colors.grey.shade300,
     primary: Colors.grey.shade200,
     secondary: Colors.white,
-    inversePrimary: Colors.grey.shade700,
+    inversePrimary: Colors.grey.shade500,
   ),
 
   textTheme: const TextTheme(

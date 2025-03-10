@@ -6,7 +6,7 @@ class PopularProductsService {
   static const String apiUrl =
       'https://django-ecommerce-backend-wgpj.onrender.com/api/products/popular/';
 
-  Future<List<Product>> fetchPopularProducts() async {
+  Future<List<Product>>  fetchPopularProducts() async {
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {

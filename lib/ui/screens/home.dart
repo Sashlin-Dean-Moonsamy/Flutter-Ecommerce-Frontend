@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lux/services/product.dart';
 import 'package:lux/ui/widgets/popular_product_list.dart';
 import 'package:lux/ui/widgets/lux_drawer.dart';
+import 'package:lux/models/product.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeScreenState extends State<Home> {
   final popularProductsService = PopularProductsService();
-  late Future<List<dynamic>> _popularProductsFuture;
+  late Future<List<Product>> _popularProductsFuture;
 
   @override
   void initState() {
@@ -38,7 +39,8 @@ class _HomeScreenState extends State<Home> {
             ),
             const SizedBox(height: 16),
             // FutureBuilder with error and empty data handling
-            Expanded(
+            SizedBox(
+              height: 550,
               child: PopularProductList(
                 popularProductsFuture: _popularProductsFuture,
               ),
