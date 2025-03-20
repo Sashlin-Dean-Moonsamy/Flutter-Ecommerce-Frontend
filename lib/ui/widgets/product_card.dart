@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lux/models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:lux/services/addToCart.dart';
+
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -68,7 +71,15 @@ class ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<CartProvider>(context, listen: false).addToCart(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${product.name} added to cart!'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.add, color: Colors.black),
                     ),
                   )
