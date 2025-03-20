@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lux/models/product.dart';
 import 'package:provider/provider.dart';
-import 'package:lux/services/addToCart.dart';
+import 'package:lux/providers/cart_provider.dart';
 
 
 class ProductCard extends StatelessWidget {
