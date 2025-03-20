@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux/ui/screens/home.dart';
-import 'package:lux/ui/screens/contact.dart';
+import 'package:lux/ui/screens/cart.dart';
 import 'package:lux/ui/screens/shop.dart';
 
 // Define route names as constants
@@ -13,7 +13,7 @@ class RouteNames {
   final Map<String, WidgetBuilder> routes = {
     home: (context) => Home(),
     shop: (context) => Shop(),
-    cart: (context) => Contact(),
+    cart: (context) => Cart(),
   };
 
 // Optional: Route generator function
