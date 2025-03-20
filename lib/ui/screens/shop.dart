@@ -117,7 +117,7 @@ class _ShopScreenState extends State<Shop> {
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return ProductCard(product: snapshot.data![index]);
+                      return ProductCard(product: snapshot.data![index], onRemove: () {  },);
                     },
                   );
                 },

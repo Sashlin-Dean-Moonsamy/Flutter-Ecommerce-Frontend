@@ -6,8 +6,22 @@ class CartProvider with ChangeNotifier {
 
   List<Product> get cart => _cart;
 
+  double get totalPrice {
+    return _cart.fold(0, (sum, item) => sum + item.price);
+  }
+
   void addToCart(Product product) {
     _cart.add(product);
-    notifyListeners(); // Notifies UI to update
+    notifyListeners();
+  }
+
+  void removeFromCart(Product product) {
+    _cart.remove(product);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _cart.clear();
+    notifyListeners();
   }
 }

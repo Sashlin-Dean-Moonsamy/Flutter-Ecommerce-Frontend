@@ -7,7 +7,7 @@ import 'package:lux/providers/cart_provider.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required Null Function() onRemove}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

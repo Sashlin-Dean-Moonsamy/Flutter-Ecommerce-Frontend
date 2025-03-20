@@ -24,7 +24,7 @@ class RouteNames {
       case RouteNames.shop:
         return MaterialPageRoute(builder: (_) => Shop());
       case RouteNames.cart:
-        return MaterialPageRoute(builder: (_) => Contact());
+        return MaterialPageRoute(builder: (_) => Cart());
       default:
         return MaterialPageRoute(
             builder: (_) =>
