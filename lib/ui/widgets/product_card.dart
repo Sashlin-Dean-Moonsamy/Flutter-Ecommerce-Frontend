@@ -8,43 +8,74 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+      height: 350, // Fixed height to prevent overflow
       child: Card(
         color: Theme.of(context).colorScheme.primary,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Image.network(
-                product.image,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/imageNotFound.jpg',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Ensures it only takes necessary space
+            children: [
+              // Image Section
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    product.image,
                     fit: BoxFit.cover,
-                  );
-                },
-              ),),
-            const SizedBox(height: 25),
-            Text(
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/imageNotFound.jpg',
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Product Name & Description
+              Text(
                 product.name,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                textAlign: TextAlign.center, // Center the name text
+                textAlign: TextAlign.center,
               ),
-            const SizedBox(height: 10),
-            Text(
-              product.description,
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center, // Center the description text
-            ),
-            Text(
-              "\$${product.price}",
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center, // Center the price text
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                product.description,
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis, // Prevents overflow
+              ),
+              const SizedBox(height: 10),
+
+              // Price & Button Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "\$${product.price}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.add, color: Colors.black),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

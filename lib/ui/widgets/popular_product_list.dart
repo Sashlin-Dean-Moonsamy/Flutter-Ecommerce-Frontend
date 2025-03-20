@@ -25,16 +25,8 @@ class PopularProductList extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              // Adds some space between cards
-              child: Align(
-                alignment: Alignment.center,
-                // Centers each product card horizontally
-                child: ProductCard(product: snapshot.data![index]),
-              ),
-            );
-          },
+            return  ProductCard(product: snapshot.data![index]);
+            },
         );
       },
     );
