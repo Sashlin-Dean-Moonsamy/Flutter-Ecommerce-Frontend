@@ -14,7 +14,7 @@ class LuxDrawer extends StatelessWidget{
           ),
           _buildDrawerItem(context, Icons.home, "Home", '/home'),
           _buildDrawerItem(context,Icons.shop, "Shop", '/shop'),
-          _buildDrawerItem(context, Icons.phone, "Contact", '/contact'),
+          _buildDrawerItem(context, Icons.phone, "Cart", '/cart'),
         ],
       ),
     );

@@ -7,13 +7,13 @@ import 'package:lux/ui/screens/shop.dart';
 class RouteNames {
   static const String home = '/home';
   static const String shop = '/shop';
-  static const String contact = '/contact';
+  static const String cart = '/cart';
 
 // Define a routes map
   final Map<String, WidgetBuilder> routes = {
     home: (context) => Home(),
     shop: (context) => Shop(),
-    contact: (context) => Contact(),
+    cart: (context) => Contact(),
   };
 
 // Optional: Route generator function
@@ -23,7 +23,7 @@ class RouteNames {
         return MaterialPageRoute(builder: (_) => Home());
       case RouteNames.shop:
         return MaterialPageRoute(builder: (_) => Shop());
-      case RouteNames.contact:
+      case RouteNames.cart:
         return MaterialPageRoute(builder: (_) => Contact());
       default:
         return MaterialPageRoute(
