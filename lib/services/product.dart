@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lux/models/product.dart';  // Import the Product model
 
-class PopularProductsService {
-  static const String apiUrl =
-      'https://django-ecommerce-backend-wgpj.onrender.com/api/products/popular/';
 
-  Future<List<Product>>  fetchPopularProducts() async {
-    final response = await http.get(Uri.parse(apiUrl));
+class ProductService {
+  static const String apiUrl =
+      'https://django-ecommerce-backend-wgpj.onrender.com/api/products/';
+
+  static Future<List<Product>>  fetchPopularProducts() async {
+    final response = await http.get(Uri.parse("${apiUrl}popular/"));
 
     if (response.statusCode == 200) {
       var decoded = json.decode(response.body);
@@ -25,10 +26,6 @@ class PopularProductsService {
       throw Exception("Failed to load popular products");
     }
   }
-}
-class ProductService {
-  static const String apiUrl =
-      'https://django-ecommerce-backend-wgpj.onrender.com/api/products/';
 
   Future<List<Product>> fetchProducts({String? category, String? searchQuery}) async {
     try {
@@ -66,5 +63,6 @@ class ProductService {
       return [];
     }
   }
+
 }
 

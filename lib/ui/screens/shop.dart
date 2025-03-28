@@ -1,130 +1,120 @@
 import 'package:flutter/material.dart';
-import 'package:lux/services/category.dart';
-import 'package:lux/services/product.dart';
-import 'package:lux/ui/widgets/category_list.dart';
-import 'package:lux/ui/widgets/product_card.dart';
 import 'package:lux/models/category.dart';
 import 'package:lux/models/product.dart';
+import 'package:lux/services/category.dart';
+import 'package:lux/ui/widgets/product_list.dart';
 
 class Shop extends StatefulWidget {
-  const Shop({Key? key}) : super(key: key);
-
   @override
   _ShopScreenState createState() => _ShopScreenState();
 }
 
 class _ShopScreenState extends State<Shop> {
   final CategoryService _categoryService = CategoryService();
-  final ProductService _productService = ProductService();
-
-  late Future<List<Category>> _categoriesFuture;
-  late Future<List<Product>> _productsFuture;
-
-  String _selectedCategory = "All"; // Track selected category
-  String _searchQuery = ""; // Track search query
+  List<Category> _categories = [];
+  List<Product>? _products;
+  String? _selectedCategory;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _categoriesFuture = _categoryService.fetchCategories();
-    _productsFuture = _productService.fetchProducts(); // Fetch all products initially
+    _loadCategories();
   }
 
-  void _onCategorySelected(String category) {
+  Future<void> _loadCategories() async {
     setState(() {
-      _selectedCategory = category;
-      _fetchFilteredProducts(); // Update product list based on category
+      _isLoading = true;
     });
+    try {
+      List<Category> categories = await _categoryService.fetchCategories();
+      setState(() {
+        _categories = categories;
+        // Automatically load products from the first category
+        if (_categories.isNotEmpty) {
+          _loadProducts(_categories[0].name);
+        }
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print("Error loading categories: $e");
+    }
   }
 
-  void _onSearchChanged(String query) {
+  Future<void> _loadProducts(String categoryName) async {
     setState(() {
-      _searchQuery = query;
-      _fetchFilteredProducts(); // Update product list based on search query
+      _isLoading = true;
+      _selectedCategory = categoryName;
     });
-  }
-
-  void _fetchFilteredProducts() {
-    setState(() {
-      _productsFuture = _productService.fetchProducts(
-        category: _selectedCategory == "All" ? null : _selectedCategory,
-        searchQuery: _searchQuery.isEmpty ? null : _searchQuery,
-      );
-    });
+    try {
+      List<Product> products = [];
+      for (var category in _categories) {
+        if (category.name == categoryName) {
+          products.addAll(category.products);
+        }
+      }
+      setState(() {
+        _products = products;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print("Error loading products: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Shop")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Bar
-            TextField(
-              onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                hintText: "Search products...",
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Category List
-            FutureBuilder<List<Category>>(
-              future: _categoriesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("No categories found"));
-                }
-
-                List<String> categories = ["All"] + snapshot.data!.map((cat) => cat.name).toList();
-
-                return CategoryList(
-                  categories: categories,
-                  onCategorySelected: _onCategorySelected,
+      appBar: AppBar(
+        title: Text("Shop"),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _categories.length,
+              itemBuilder: (context, index) {
+                bool isSelected = _selectedCategory == _categories[index].name;
+                return GestureDetector(
+                  onTap: () => _loadProducts(_categories[index].name),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.grey.shade200: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        _categories[index].name,
+                        style: TextStyle(
+                          color: isSelected ? Colors.black : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
-            const SizedBox(height: 16),
-
-            // Product List
-            Expanded(
-              child: FutureBuilder<List<Product>>(
-                future: _productsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text("Error: ${snapshot.error}"));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text("No products found"));
-                  }
-
-                  return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Show two products per row
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.75,
-                    ),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: snapshot.data![index], onRemove: () {  },);
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _products == null
+                ? Center(child: Text("Select a category"))
+                : _products!.isEmpty
+                ? Center(child: Text("No products found"))
+                : ProductList(products: _products),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux/services/product.dart';
-import 'package:lux/ui/widgets/popular_product_list.dart';
+import 'package:lux/ui/widgets/product_list.dart';
 import 'package:lux/ui/widgets/lux_drawer.dart';
 import 'package:lux/models/product.dart';
 
@@ -12,13 +12,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<Home> {
-  final popularProductsService = PopularProductsService();
+  final productsService = ProductService();
   late Future<List<Product>> _popularProductsFuture;
 
   @override
   void initState() {
     super.initState();
-    _popularProductsFuture = popularProductsService.fetchPopularProducts();
+    _popularProductsFuture = ProductService.fetchPopularProducts();
   }
 
   @override
@@ -49,8 +49,8 @@ class _HomeScreenState extends State<Home> {
             // FutureBuilder with error and empty data handling
             SizedBox(
               height: 550,
-              child: PopularProductList(
-                popularProductsFuture: _popularProductsFuture,
+              child: ProductList(
+                productsFuture: _popularProductsFuture,
               ),
             ),
 
