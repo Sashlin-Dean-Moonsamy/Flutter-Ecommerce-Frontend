@@ -27,6 +27,14 @@ class _HomeScreenState extends State<Home> {
       appBar: AppBar(
         title: const Text('Lux'),
         backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, '/cart');
+            },
+          ),
+        ],
       ),
       drawer: LuxDrawer(),
       body: Padding(

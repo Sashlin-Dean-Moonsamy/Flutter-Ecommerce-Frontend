@@ -25,7 +25,7 @@ class PopularProductList extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
-            return  ProductCard(product: snapshot.data![index], onRemove: () {  },);
+            return  ProductCard(product: snapshot.data![index],);
             },
         );
       },

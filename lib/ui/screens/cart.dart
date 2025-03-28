@@ -42,13 +42,9 @@ class Cart extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {
-                    final product = cartItems[index];
+                    final order = cartItems[index];
                     return ProductCard(
-                      product: product,
-                      onRemove: () {
-                        // Remove the product from the cart
-                        cartProvider.removeFromCart(product);
-                      },
+                      product: order.product,
                     );
                   },
                 ),
@@ -60,7 +56,7 @@ class Cart extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total: \$${cartProvider.totalPrice}',
+                      'Total: \$${cartProvider.totalPrice.toStringAsFixed(2)}',
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     ElevatedButton(
