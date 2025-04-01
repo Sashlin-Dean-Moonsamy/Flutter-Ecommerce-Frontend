@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lux/models/category.dart';
 import 'package:lux/models/product.dart';
 import 'package:lux/services/category.dart';
-import 'package:lux/ui/widgets/product_list.dart';
+import 'package:lux/ui/widgets/product_grid.dart';
+import 'package:lux/services/product.dart';
 
 class Shop extends StatefulWidget {
   @override
@@ -12,14 +13,24 @@ class Shop extends StatefulWidget {
 class _ShopScreenState extends State<Shop> {
   final CategoryService _categoryService = CategoryService();
   List<Category> _categories = [];
-  List<Product>? _products;
+  List<Product>? _categoryProducts;
+  List<Product>? _allProducts;
+  List<Product>? _filteredProducts;
   String? _selectedCategory;
   bool _isLoading = false;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadCategories();
+    _searchController.addListener(_filterProducts);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCategories() async {
@@ -30,7 +41,6 @@ class _ShopScreenState extends State<Shop> {
       List<Category> categories = await _categoryService.fetchCategories();
       setState(() {
         _categories = categories;
-        // Automatically load products from the first category
         if (_categories.isNotEmpty) {
           _loadProducts(_categories[0].name);
         }
@@ -57,7 +67,8 @@ class _ShopScreenState extends State<Shop> {
         }
       }
       setState(() {
-        _products = products;
+        _categoryProducts = products;
+        _filteredProducts = products;
         _isLoading = false;
       });
     } catch (e) {
@@ -68,11 +79,52 @@ class _ShopScreenState extends State<Shop> {
     }
   }
 
+  void _filterProducts() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (_searchController.text.isEmpty) {
+      setState(() {
+        _filteredProducts = _categoryProducts;
+        _isLoading = false;
+      });
+    } else {
+      try {
+        List<Product> searchedProducts = await ProductService.searchProducts(_searchController.text);
+        setState(() {
+          _filteredProducts = searchedProducts;
+          _isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        print("Error searching products: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Shop"),
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: "Search products...",
+            border: InputBorder.none,
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, '/cart');
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -90,7 +142,7 @@ class _ShopScreenState extends State<Shop> {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.grey.shade200: Colors.transparent,
+                        color: isSelected ? Colors.grey.shade200 : Colors.transparent,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
@@ -108,11 +160,11 @@ class _ShopScreenState extends State<Shop> {
           Expanded(
             child: _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _products == null
+                : _filteredProducts == null
                 ? Center(child: Text("Select a category"))
-                : _products!.isEmpty
+                : _filteredProducts!.isEmpty
                 ? Center(child: Text("No products found"))
-                : ProductList(products: _products),
+                : ProductGrid(products: _filteredProducts!),
           ),
         ],
       ),

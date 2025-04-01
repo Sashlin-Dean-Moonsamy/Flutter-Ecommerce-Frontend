@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux/services/product.dart';
-import 'package:lux/ui/widgets/product_list.dart';
+import 'package:lux/ui/widgets/product_list.dart';  // Use ProductList instead of ProductGrid
 import 'package:lux/ui/widgets/lux_drawer.dart';
 import 'package:lux/models/product.dart';
 
@@ -40,28 +40,47 @@ class _HomeScreenState extends State<Home> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Premium Selection",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            // Center the title text horizontally
+            Center(
+              child: const Text(
+                "Premium Selection",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 16),
+
             // FutureBuilder with error and empty data handling
-            SizedBox(
-              height: 550,
-              child: ProductList(
-                productsFuture: _popularProductsFuture,
+            Expanded(
+              child: FutureBuilder<List<Product>>(
+                future: _popularProductsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text("No products available"));
+                  }
+
+                  return ProductList(
+                    productsFuture: Future.value(snapshot.data!),  // Passing fetched products
+                  );
+                },
               ),
             ),
 
-            // Button to navigate to the Shop screen
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/shop');
-                },
-                child: const Text('Browse Shop'),
+            // Center the "Browse Shop" button
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/shop');
+                  },
+                  child: const Text('Browse Shop'),
+                ),
               ),
             ),
           ],
@@ -70,3 +89,4 @@ class _HomeScreenState extends State<Home> {
     );
   }
 }
+
